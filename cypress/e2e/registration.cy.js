@@ -12,7 +12,7 @@ describe('Student Registration page', () => {
       firstName: 'John',
       lastName: 'Doe',
       email: 'john.doe@example.com',
-      gender: 'Male',
+      gender: 'Male', // Matches DOM value exactly (case-sensitive)
       phone: '1234567890',
       dateOfBirth: {
         day: '15',
@@ -20,7 +20,7 @@ describe('Student Registration page', () => {
         year: '1995'
       },
       subjects: ['Maths', 'English'],
-      hobbies: ['Sports', 'Reading'], // Will map to values 1 and 2
+      hobbies: ['Sports', 'Reading'],
       address: '123 Main Street, City',
       state: 'NCR',
       city: 'Delhi'
@@ -42,7 +42,9 @@ describe('Student Registration page', () => {
       testData.dateOfBirth.month
     );
     cy.get('.react-datepicker__year-select').select(testData.dateOfBirth.year);
-    cy.get(`.react-datepicker__day--0${testData.dateOfBirth.day}`).click();
+    cy.get(
+      `.react-datepicker__day--${testData.dateOfBirth.day.padStart(2, '0')}`
+    ).click();
 
     // Subjects
     testData.subjects.forEach((subject) => {
@@ -64,9 +66,9 @@ describe('Student Registration page', () => {
 
     // State and City
     cy.get('#state').click();
-    cy.get(`#react-select-3-option-0`).contains(testData.state).click();
+    cy.contains('.react-select__option', testData.state).click();
     cy.get('#city').click();
-    cy.get(`#react-select-4-option-0`).contains(testData.city).click();
+    cy.contains('.react-select__option', testData.city).click();
 
     // Submit form
     cy.get('#submit').click();
@@ -76,21 +78,30 @@ describe('Student Registration page', () => {
 
     // Verify data in modal
     cy.get('tbody').within(() => {
+      // Row 0: Student Name
       cy.get('tr')
         .eq(0)
         .should('contain', `${testData.firstName} ${testData.lastName}`);
+      // Row 1: Student Email
       cy.get('tr').eq(1).should('contain', testData.email);
+      // Row 2: Gender
       cy.get('tr').eq(2).should('contain', testData.gender);
+      // Row 3: Mobile
       cy.get('tr').eq(3).should('contain', testData.phone);
+      // Row 4: Date of Birth
       cy.get('tr')
         .eq(4)
         .should(
           'contain',
-          `${testData.dateOfBirth.day} ${testData.dateOfBirth.month},${testData.dateOfBirth.year}`
+          `${testData.dateOfBirth.day} ${testData.dateOfBirth.month}, ${testData.dateOfBirth.year}`
         );
+      // Row 5: Subjects
       cy.get('tr').eq(5).should('contain', testData.subjects.join(', '));
+      // Row 6: Hobbies
       cy.get('tr').eq(6).should('contain', testData.hobbies.join(', '));
+      // Row 8: Address
       cy.get('tr').eq(8).should('contain', testData.address);
+      // Row 9: State and City
       cy.get('tr')
         .eq(9)
         .should('contain', `${testData.state} ${testData.city}`);
