@@ -99,11 +99,11 @@ describe('Student Registration page', () => {
       cy.get('tr').eq(5).should('contain', testData.subjects.join(', '));
       // Row 6: Hobbies
       cy.get('tr').eq(6).should('contain', testData.hobbies.join(', '));
-      // Row 8: Address
-      cy.get('tr').eq(8).should('contain', testData.address);
-      // Row 9: State and City
+      // Row 7: Address
+      cy.get('tr').eq(7).should('contain', testData.address);
+      // Row 8: State and City
       cy.get('tr')
-        .eq(9)
+        .eq(8)
         .should('contain', `${testData.state} ${testData.city}`);
     });
 
